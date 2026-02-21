@@ -170,6 +170,7 @@ export function App() {
         <button onClick={handleExportPng} disabled={!bestFit}>
           Export PNG
         </button>
+        <button onClick={() => window.open('/intro.html', '_blank')}>📖 Guide</button>
         <button onClick={toggleTheme}>{theme === 'light' ? '🌙' : '☀️'}</button>
       </div>
 
