@@ -1,0 +1,264 @@
+:root {
+  --bg: #ffffff;
+  --bg-panel: #f8f9fa;
+  --text: #1a1a2e;
+  --text-muted: #6c757d;
+  --border: #dee2e6;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --success: #16a34a;
+  --danger: #dc2626;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+[data-theme='dark'] {
+  --bg: #0f172a;
+  --bg-panel: #1e293b;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --border: #334155;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --success: #22c55e;
+  --danger: #ef4444;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+}
+
+.toolbar h1 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-right: auto;
+  color: var(--accent);
+}
+
+.toolbar button, .toolbar select {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.toolbar button:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* Main layout */
+.main {
+  display: grid;
+  grid-template-columns: 340px 1fr 300px;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Data entry panel */
+.panel {
+  padding: 16px;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  background: var(--bg-panel);
+}
+
+.panel h2 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.panel textarea {
+  width: 100%;
+  height: 260px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.82rem;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  resize: vertical;
+}
+
+.panel .hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.panel .error {
+  color: var(--danger);
+  font-size: 0.8rem;
+  margin-top: 6px;
+}
+
+.panel .data-table {
+  width: 100%;
+  margin-top: 12px;
+  font-size: 0.78rem;
+  border-collapse: collapse;
+}
+
+.panel .data-table th,
+.panel .data-table td {
+  padding: 4px 8px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel .data-table th {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Chart area */
+.chart-area {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chart-area h2 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.chart-container {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Results panel */
+.results {
+  padding: 16px;
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  background: var(--bg-panel);
+}
+
+.results h2 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.result-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.result-card h3 {
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  font-size: 0.82rem;
+}
+
+.result-row .label {
+  color: var(--text-muted);
+}
+
+.result-row .value {
+  font-weight: 600;
+  font-family: 'Fira Code', monospace;
+}
+
+.best-badge {
+  display: inline-block;
+  background: var(--success);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  text-transform: uppercase;
+}
+
+.forecast-table {
+  width: 100%;
+  font-size: 0.75rem;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.forecast-table th,
+.forecast-table td {
+  padding: 3px 6px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+}
+
+.forecast-table th {
+  text-align: right;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* File upload */
+.file-upload {
+  margin-top: 10px;
+}
+
+.file-upload label {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.file-upload label:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.file-upload input { display: none; }
