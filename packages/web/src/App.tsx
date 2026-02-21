@@ -13,6 +13,7 @@ import {
 } from '@declinecurve/engine';
 import { ProductionChart } from './components/ProductionChart';
 import { ResultsPanel } from './components/ResultsPanel';
+import { sampleDatasets } from './samples';
 
 const SAMPLE_DATA = `Date,Rate (bbl/month)
 2022-01,1200
@@ -152,6 +153,20 @@ export function App() {
     <div className="app">
       <div className="toolbar">
         <h1>📉 DeclineCurve</h1>
+        <select
+          defaultValue=""
+          onChange={(e) => {
+            if (e.target.value) {
+              setRawData(sampleDatasets[Number(e.target.value)].data);
+              e.target.value = '';
+            }
+          }}
+        >
+          <option value="" disabled>📂 Samples</option>
+          {sampleDatasets.map((s, i) => (
+            <option key={i} value={i}>{s.name}</option>
+          ))}
+        </select>
         <button onClick={handleParse}>Import</button>
         <button onClick={handleFit} disabled={!parsed}>
           Fit
