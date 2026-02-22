@@ -60,7 +60,7 @@ export function ResultsPanel({ fits, bestFit, forecast, onExportCsv }: Props) {
             </div>
             <div className="result-row">
               <span className="label">EUR</span>
-              <span className="value">{fit.eur.toLocaleString(undefined, { maximumFractionDigits: 0 })} bbl</span>
+              <span className="value">{Number.isFinite(fit.eur) ? `${fit.eur.toLocaleString(undefined, { maximumFractionDigits: 0 })} bbl` : 'N/A'}</span>
             </div>
           </div>
         );

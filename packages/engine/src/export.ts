@@ -13,7 +13,7 @@ export function exportResultsCsv(fit: FitResult): string {
   lines.push(`b-factor,${m.type === 'hyperbolic' ? m.b.toFixed(4) : '0'}`);
   lines.push(`R²,${fit.rSquared.toFixed(6)}`);
   lines.push(`AIC,${fit.aic.toFixed(2)}`);
-  lines.push(`EUR,${fit.eur.toFixed(2)}`);
+  lines.push(`EUR,${Number.isFinite(fit.eur) ? fit.eur.toFixed(2) : 'N/A'}`);
   return lines.join('\n');
 }
 
@@ -42,6 +42,6 @@ export function formatSummary(fit: FitResult): string {
     parts.push(`b = ${m.b.toFixed(4)}`);
   }
   parts.push(`R² = ${fit.rSquared.toFixed(4)}`);
-  parts.push(`EUR = ${fit.eur.toFixed(0)} bbl`);
+  parts.push(`EUR = ${Number.isFinite(fit.eur) ? fit.eur.toFixed(0) + ' bbl' : 'N/A'}`);
   return parts.join('\n');
 }
