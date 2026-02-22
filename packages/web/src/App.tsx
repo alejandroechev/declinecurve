@@ -186,6 +186,7 @@ export function App() {
           Export PNG
         </button>
         <button onClick={() => window.open('/intro.html', '_blank')}>📖 Guide</button>
+        <button onClick={() => window.open('https://github.com/alejandroechev/declinecurve/issues/new', '_blank')} title="Feedback">💬 Feedback</button>
         <button onClick={toggleTheme}>{theme === 'light' ? '🌙' : '☀️'}</button>
       </div>
 
