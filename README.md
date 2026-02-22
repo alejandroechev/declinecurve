@@ -5,7 +5,6 @@
 Paste your well's monthly production data and instantly fit exponential & hyperbolic decline curves, compute EUR, and generate forecasts. No install, no license fees.
 
 ![DeclineCurve Screenshot](docs/screenshot.png)
-<!-- TODO: replace with actual screenshot -->
 
 ## Features
 
