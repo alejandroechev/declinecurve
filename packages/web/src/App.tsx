@@ -1,8 +1,6 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import {
   parseProductionData,
-  fitExponential,
-  fitHyperbolic,
   selectBestFit,
   generateForecast,
   exportResultsCsv,
@@ -44,7 +42,10 @@ const SAMPLE_DATA = `Date,Rate (bbl/month)
 type ForecastPeriod = 12 | 24 | 60;
 
 export function App() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('declinecurve-theme');
+    return saved === 'dark' ? 'dark' : 'light';
+  });
   const [rawData, setRawData] = useState(SAMPLE_DATA);
   const [parsed, setParsed] = useState<ParsedProduction | null>(null);
   const [fits, setFits] = useState<FitResult[]>([]);
@@ -53,14 +54,15 @@ export function App() {
   const [forecastPeriod, setForecastPeriod] = useState<ForecastPeriod>(24);
   const [error, setError] = useState<string | null>(null);
   const chartRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const toggleTheme = () => {
-    const next = theme === 'light' ? 'dark' : 'light';
-    setTheme(next);
-    document.documentElement.setAttribute('data-theme', next);
-  };
+  // Apply theme on mount
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, []);
 
-  const handleParse = useCallback(() => {
+  // Auto-parse when rawData changes
+  useEffect(() => {
     try {
       const p = parseProductionData(rawData);
       setParsed(p);
@@ -68,11 +70,20 @@ export function App() {
       setFits([]);
       setBestFit(null);
       setForecast(null);
-    } catch (e: unknown) {
-      setError((e as Error).message);
+    } catch {
       setParsed(null);
+      setFits([]);
+      setBestFit(null);
+      setForecast(null);
     }
   }, [rawData]);
+
+  const toggleTheme = () => {
+    const next = theme === 'light' ? 'dark' : 'light';
+    setTheme(next);
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('declinecurve-theme', next);
+  };
 
   const handleFit = useCallback(() => {
     if (!parsed) return;
@@ -80,7 +91,6 @@ export function App() {
       const { best, all } = selectBestFit(parsed.time, parsed.rates);
       setFits(all);
       setBestFit(best);
-      // Auto-generate forecast
       const lastTime = parsed.time[parsed.time.length - 1];
       const fc = generateForecast(best.model, forecastPeriod, 1, lastTime);
       setForecast(fc);
@@ -139,6 +149,14 @@ export function App() {
     img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
   }, [theme]);
 
+  const handleExportSvg = useCallback(() => {
+    if (!chartRef.current) return;
+    const svg = chartRef.current.querySelector('svg');
+    if (!svg) return;
+    const svgData = new XMLSerializer().serializeToString(svg);
+    downloadFile(svgData, 'decline_chart.svg', 'image/svg+xml');
+  }, []);
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -147,6 +165,7 @@ export function App() {
       setRawData(ev.target?.result as string);
     };
     reader.readAsText(file);
+    e.target.value = '';
   };
 
   return (
@@ -154,6 +173,7 @@ export function App() {
       <div className="toolbar">
         <h1>📉 DeclineCurve</h1>
         <select
+          data-testid="sample-select"
           defaultValue=""
           onChange={(e) => {
             if (e.target.value) {
@@ -167,10 +187,16 @@ export function App() {
             <option key={i} value={i}>{s.name}</option>
           ))}
         </select>
-        <button onClick={handleParse}>Import</button>
-        <button onClick={handleFit} disabled={!parsed}>
-          Fit
-        </button>
+        <button onClick={() => fileInputRef.current?.click()}>📂 Upload</button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".csv,.txt"
+          onChange={handleFileUpload}
+          style={{ display: 'none' }}
+          data-testid="file-input"
+        />
+        <button className="btn-primary" onClick={handleFit} disabled={!parsed}>▶ Fit</button>
         <select
           value={forecastPeriod}
           onChange={(e) => handleForecastPeriodChange(Number(e.target.value) as ForecastPeriod)}
@@ -179,12 +205,7 @@ export function App() {
           <option value={24}>24 months</option>
           <option value={60}>60 months</option>
         </select>
-        <button onClick={handleExportCsv} disabled={!bestFit}>
-          Export CSV
-        </button>
-        <button onClick={handleExportPng} disabled={!bestFit}>
-          Export PNG
-        </button>
+        <div className="toolbar-spacer" />
         <button onClick={() => window.open('/intro.html', '_blank')}>📖 Guide</button>
         <button onClick={() => window.open('https://github.com/alejandroechev/declinecurve/issues/new', '_blank')} title="Feedback">💬 Feedback</button>
         <button onClick={toggleTheme}>{theme === 'light' ? '🌙' : '☀️'}</button>
@@ -200,12 +221,6 @@ export function App() {
             placeholder="Paste date,rate data here..."
           />
           <div className="hint">CSV or tab-delimited: Date, Rate (bbl/month)</div>
-          <div className="file-upload">
-            <label>
-              📁 Upload CSV
-              <input type="file" accept=".csv,.txt" onChange={handleFileUpload} />
-            </label>
-          </div>
           {error && <div className="error">⚠️ {error}</div>}
           {parsed && (
             <table className="data-table">
@@ -238,7 +253,15 @@ export function App() {
 
         {/* Center: Chart */}
         <div className="chart-area">
-          <h2>Production History & Decline Curve</h2>
+          <div className="chart-header">
+            <h2>Production History & Decline Curve</h2>
+            {bestFit && (
+              <div className="chart-exports">
+                <button onClick={handleExportPng} title="Export PNG">📷 PNG</button>
+                <button onClick={handleExportSvg} title="Export SVG">🖼️ SVG</button>
+              </div>
+            )}
+          </div>
           <div className="chart-container" ref={chartRef}>
             <ProductionChart
               parsed={parsed}
@@ -251,7 +274,7 @@ export function App() {
 
         {/* Right: Results */}
         <div className="results">
-          <ResultsPanel fits={fits} bestFit={bestFit} forecast={forecast} />
+          <ResultsPanel fits={fits} bestFit={bestFit} forecast={forecast} onExportCsv={handleExportCsv} />
         </div>
       </div>
     </div>

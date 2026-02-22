@@ -50,8 +50,12 @@ body {
 .toolbar h1 {
   font-size: 1.1rem;
   font-weight: 700;
-  margin-right: auto;
+  margin-right: 8px;
   color: var(--accent);
+}
+
+.toolbar-spacer {
+  flex: 1;
 }
 
 .toolbar button, .toolbar select {
@@ -68,6 +72,23 @@ body {
   background: var(--accent);
   color: white;
   border-color: var(--accent);
+}
+
+.toolbar .btn-primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.toolbar .btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.toolbar .btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Main layout */
@@ -147,13 +168,40 @@ body {
   overflow: hidden;
 }
 
-.chart-area h2 {
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.chart-header h2 {
   font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 12px;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.chart-exports {
+  display: flex;
+  gap: 6px;
+}
+
+.chart-exports button {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.chart-exports button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .chart-container {
@@ -169,13 +217,35 @@ body {
   background: var(--bg-panel);
 }
 
-.results h2 {
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.results-header h2 {
   font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 10px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-muted);
+  margin: 0;
+}
+
+.export-inline {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.export-inline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .result-card {
@@ -240,25 +310,3 @@ body {
   color: var(--text-muted);
   font-weight: 600;
 }
-
-/* File upload */
-.file-upload {
-  margin-top: 10px;
-}
-
-.file-upload label {
-  display: inline-block;
-  padding: 6px 14px;
-  border: 1px dashed var(--border);
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-}
-
-.file-upload label:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.file-upload input { display: none; }

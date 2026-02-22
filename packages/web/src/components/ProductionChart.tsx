@@ -68,7 +68,7 @@ export function ProductionChart({ parsed, fits, bestFit, forecast }: Props) {
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <ComposedChart data={chartData} margin={{ top: 10, right: 20, bottom: 20, left: 20 }}>
+      <ComposedChart data={chartData} margin={{ top: 10, right: 20, bottom: 40, left: 20 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
         <XAxis dataKey="month" label={{ value: 'Month', position: 'bottom', offset: 0 }} />
         <YAxis label={{ value: 'Rate (bbl/month)', angle: -90, position: 'insideLeft', offset: 10 }} />
@@ -77,7 +77,7 @@ export function ProductionChart({ parsed, fits, bestFit, forecast }: Props) {
           labelFormatter={(v) => `Month ${v}`}
           formatter={(value: number) => [value.toFixed(1), '']}
         />
-        <Legend />
+        <Legend verticalAlign="top" height={36} />
 
         {/* Actual production scatter */}
         <Scatter name="Actual" dataKey="actual" fill="#ef4444" shape="circle" legendType="circle" />

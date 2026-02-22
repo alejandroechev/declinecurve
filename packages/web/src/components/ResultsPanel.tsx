@@ -4,15 +4,16 @@ interface Props {
   fits: FitResult[];
   bestFit: FitResult | null;
   forecast: ForecastResult | null;
+  onExportCsv?: () => void;
 }
 
-export function ResultsPanel({ fits, bestFit, forecast }: Props) {
+export function ResultsPanel({ fits, bestFit, forecast, onExportCsv }: Props) {
   if (fits.length === 0) {
     return (
       <>
         <h2>Results</h2>
         <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-          Click <strong>Import</strong> then <strong>Fit</strong> to analyze decline.
+          Click <strong>▶ Fit</strong> to analyze decline.
         </div>
       </>
     );
@@ -20,7 +21,12 @@ export function ResultsPanel({ fits, bestFit, forecast }: Props) {
 
   return (
     <>
-      <h2>Results</h2>
+      <div className="results-header">
+        <h2>Results</h2>
+        {bestFit && onExportCsv && (
+          <button className="export-inline" onClick={onExportCsv} title="Export CSV">📄 CSV</button>
+        )}
+      </div>
 
       {fits.map((fit) => {
         const isBest = bestFit && fit.model.type === bestFit.model.type;
