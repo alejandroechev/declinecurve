@@ -453,3 +453,42 @@ test.describe('UI', () => {
     await expect(page.locator('.results').getByText('▶ Fit')).toBeVisible();
   });
 });
+
+// --- State Persistence ---
+
+test.describe('State Persistence', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(BASE);
+  });
+
+  test('production data persists across reload', async ({ page }) => {
+    const textarea = page.locator('textarea');
+    const customData = `Date,Rate\n2023-01,500\n2023-02,480\n2023-03,460`;
+    await textarea.fill(customData);
+    await page.waitForTimeout(700);
+    await page.reload();
+    await expect(textarea).toHaveValue(/500/);
+  });
+});
+
+// --- Toolbar Button Order ---
+
+test.describe('Toolbar Button Order', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(BASE);
+  });
+
+  test('buttons in order: Upload, Samples, Fit, spacer, Guide, Feedback, Theme', async ({ page }) => {
+    const toolbar = page.locator('.toolbar');
+    const html = await toolbar.innerHTML();
+    const uploadIdx = html.indexOf('Upload');
+    const samplesIdx = html.indexOf('sample-select');
+    const fitIdx = html.indexOf('▶ Fit');
+    const spacerIdx = html.indexOf('toolbar-spacer');
+    const guideIdx = html.indexOf('Guide');
+    expect(uploadIdx).toBeLessThan(samplesIdx);
+    expect(samplesIdx).toBeLessThan(fitIdx);
+    expect(fitIdx).toBeLessThan(spacerIdx);
+    expect(spacerIdx).toBeLessThan(guideIdx);
+  });
+});

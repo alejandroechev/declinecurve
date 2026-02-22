@@ -41,12 +41,23 @@ const SAMPLE_DATA = `Date,Rate (bbl/month)
 
 type ForecastPeriod = 12 | 24 | 60;
 
+const STORAGE_KEY = 'declinecurve-state';
+
+function loadSavedState(): { rawData: string } | null {
+  try {
+    const json = localStorage.getItem(STORAGE_KEY);
+    if (!json) return null;
+    return JSON.parse(json);
+  } catch { return null; }
+}
+
 export function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('declinecurve-theme');
     return saved === 'dark' ? 'dark' : 'light';
   });
-  const [rawData, setRawData] = useState(SAMPLE_DATA);
+  const saved = loadSavedState();
+  const [rawData, setRawData] = useState(saved?.rawData ?? SAMPLE_DATA);
   const [parsed, setParsed] = useState<ParsedProduction | null>(null);
   const [fits, setFits] = useState<FitResult[]>([]);
   const [bestFit, setBestFit] = useState<FitResult | null>(null);
@@ -55,6 +66,14 @@ export function App() {
   const [error, setError] = useState<string | null>(null);
   const chartRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Debounced persistence
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ rawData })); } catch { /* noop */ }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [rawData]);
 
   // Apply theme on mount
   useEffect(() => {
@@ -172,6 +191,15 @@ export function App() {
     <div className="app">
       <div className="toolbar">
         <h1>📉 DeclineCurve</h1>
+        <button onClick={() => fileInputRef.current?.click()}>📂 Upload</button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".csv,.txt"
+          onChange={handleFileUpload}
+          style={{ display: 'none' }}
+          data-testid="file-input"
+        />
         <select
           data-testid="sample-select"
           defaultValue=""
@@ -187,15 +215,6 @@ export function App() {
             <option key={i} value={i}>{s.name}</option>
           ))}
         </select>
-        <button onClick={() => fileInputRef.current?.click()}>📂 Upload</button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".csv,.txt"
-          onChange={handleFileUpload}
-          style={{ display: 'none' }}
-          data-testid="file-input"
-        />
         <button className="btn-primary" onClick={handleFit} disabled={!parsed}>▶ Fit</button>
         <select
           value={forecastPeriod}
