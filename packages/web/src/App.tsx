@@ -11,6 +11,7 @@ import {
 } from '@declinecurve/engine';
 import { ProductionChart } from './components/ProductionChart';
 import { ResultsPanel } from './components/ResultsPanel';
+import { FeedbackModal } from './components/FeedbackModal';
 import { sampleDatasets } from './samples';
 
 const SAMPLE_DATA = `Date,Rate (bbl/month)
@@ -64,6 +65,7 @@ export function App() {
   const [forecast, setForecast] = useState<ForecastResult | null>(null);
   const [forecastPeriod, setForecastPeriod] = useState<ForecastPeriod>(24);
   const [error, setError] = useState<string | null>(null);
+  const [showFeedback, setShowFeedback] = useState(false);
   const chartRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -226,9 +228,12 @@ export function App() {
         </select>
         <div className="toolbar-spacer" />
         <button onClick={() => window.open('/intro.html', '_blank')}>📖 Guide</button>
-        <button onClick={() => window.open('https://github.com/alejandroechev/declinecurve/issues/new', '_blank')} title="Feedback">💬 Feedback</button>
+        <button onClick={() => setShowFeedback(true)} title="Feedback">💬 Feedback</button>
+        <a href="https://github.com/alejandroechev/declinecurve" target="_blank" rel="noopener" className="github-link">GitHub</a>
         <button onClick={toggleTheme}>{theme === 'light' ? '🌙' : '☀️'}</button>
       </div>
+
+      <FeedbackModal open={showFeedback} onClose={() => setShowFeedback(false)} product="DeclineCurve" />
 
       <div className="main">
         {/* Left: Data Entry */}
