@@ -12,7 +12,7 @@ Built a free web app for Arps decline curve analysis. It fits exponential, hyper
 
 Automatically selects the best-fit model using R² and AIC comparison. Just paste your rate-time data and it does the rest — decline rate, b-factor, EUR, and forecast plot.
 
-No IHS Harmony license needed. No install, no login, runs in your browser.
+Runs in your browser with no install required.
 
 🔗 **Live:** https://declinecurve.vercel.app
 📂 **Source:** https://github.com/alejandroechev/declinecurve
@@ -29,7 +29,7 @@ Would love feedback from reservoir/production engineers — what features would 
 
 I built a free browser-based tool for Arps decline curve analysis. Paste your production data, it fits exponential/hyperbolic/harmonic models and gives you EUR and a production forecast.
 
-No IHS license, no install, no account. Works on any device with a browser. Open source too.
+No install or account required. Works on any device with a browser. Open source too.
 
 🔗 https://declinecurve.vercel.app
 📂 https://github.com/alejandroechev/declinecurve
@@ -46,9 +46,10 @@ What would make this useful for people in the field? Looking for feedback from a
 
 I'm building free engineering tools for the energy industry. DeclineCurve does Arps decline curve analysis — fits exponential, hyperbolic, and harmonic models to well production data and calculates estimated ultimate recovery.
 
-All open source, runs client-side, no data leaves your browser. The goal is making basic reservoir engineering tools accessible without expensive software licenses.
+All open source, runs client-side, no data leaves your browser. The goal is making basic reservoir engineering tools accessible licenses.
 
 🔗 https://declinecurve.vercel.app
 📂 https://github.com/alejandroechev/declinecurve
 
 Feedback from petroleum engineers would be really valuable.
+
